@@ -12,7 +12,7 @@ function Board() {
         for (let i = 1; i <= n; i++) {
             let arr = [];
             for (let j = 1; j <= n; j++) {
-                arr.push('');
+                arr.push('.');
             }
             board.push(arr);
         }
@@ -41,10 +41,10 @@ function Board() {
     }
     function fire(x, y) {
         if (!ok(x, y)) throw Error("invail position");
-        let idReturn = '';
+        let idReturn = null;
         if (board[x][y] == 'x') {
             return "Repeat fire";
-        } else if (board[x][y] != '') {
+        } else if (board[x][y] != '.') {
             shipInBoard[board[x][y]].remain--;
             idReturn = board[x][y];
         }
@@ -59,11 +59,68 @@ function Board() {
     function allPartDestroyed(id) {
         return shipInBoard[id].remain == 0;
     }
-    function printBoard() {
+    function printBoard(printFiredOnly = false) {
         for (let row of board) {
-            console.log(row);
+            let tmp = [...row];
+            if (printFiredOnly) {
+                for (let i = 0; i < tmp.length; i++) 
+                    if (tmp[i] != 'x') tmp[i] = '.';
+            }
+            console.log(tmp.join(' '));
         }
     }
 
     return {init, put, fire, isLose, allPartDestroyed, printBoard};
 };
+
+class Player {
+    win = 0;
+    constructor(name, avatarSrc) {
+        this.name = name;
+        this.id = crypto.randomUUID();        
+        this.avatarSrc = avatarSrc;
+        this.board = Board();
+    }
+};
+
+const playInConsole = (() => {
+    let players = [new Player("Dat"), new Player("Lang")];    
+    function play(n) {
+        players.forEach(p => p.board.init(n));
+
+        for (let turn = 0;; turn = (turn == 0 ? 1 : 0)) {
+            const curBoard = players[(turn == 0 ? 1 : 0)].board;
+            console.log(`This is turn of player ${players[turn].name}`);
+
+            while (turn != -1) {
+                console.log("This is board of your opponent")
+                curBoard.printBoard(true);
+                let [x, y] = prompt('Please input position:').split(' ').map(num => Number(num));
+                let res = curBoard.fire(x, y);
+                console.log(res);
+                if (res == "Repeat fire") {
+                    console.log("You have enter repeat position");
+                } else {
+                    if (res != null && curBoard.allPartDestroyed(res)) {
+                        console.log(`You destroyed ship of size ${curBoard.shipInBoard[res].size}.`)
+                        if (curBoard.isLose()) {
+                            console.log(`Congratulation! player ${players[turn].name} win this game`);
+                            players[turn].win++;
+                            turn = -1;
+                            break;
+                        }
+                        console.log("You have another fire");
+                        continue;
+                    }
+                    break;
+                }
+            }
+        }
+
+        console.log(players);
+    }
+
+    return {play};
+})();
+
+playInConsole.play(5);
