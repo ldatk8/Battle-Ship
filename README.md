@@ -1,17 +1,17 @@
 # Battle-Ship
 This file contain how I do in this project
 
-Rule:
+# Rule
     Two player place their ship in n*n board. Then in turn gusse where is the oponment'ship'postion to destroy
     One win when he find all ship of oponment
-Core feature:
-    Play with human and play with computer
-    Computer have intelligent strategy
-    We can drag and drop ship in to board
-    Change the number of ship when begin
+### Core feature
+- Play with human and play withcomputer
+- Computer have intelligent strategy
+- We can drag and drop ship in to board
+- Change the number of ship when begin
     Have a special fire can detroy 9 cell in once (init have one, when consecusive detroy 3 ship will recive another)
 
-Build process
+### Build process
     Make run in console first
         Some Object we need
             Board:
@@ -30,5 +30,6 @@ Build process
             Player:
                 contain board object
                 play method
+        
 
     
