@@ -120,6 +120,7 @@ function Board() {
                 put(pos[ship].i, pos[ship].j, pos[ship].dir, ships[ship].len, ships[ship].id);
             }
         }
+        return "Done!";
     }
 
     return {init, put, fire, isLose, allPartDestroyed, printBoard, createRandomPosition};
