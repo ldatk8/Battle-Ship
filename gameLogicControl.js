@@ -40,9 +40,22 @@ const logicControl = (() => {
     }
     let turn = 0, r = (turn) => (turn + 1) % 2;
     let out = document.querySelector('.control output.mess');
+    function resetShip(player) {
+        Array.from(player.dom.ships.querySelectorAll('img')).forEach(s => {
+            s.classList.remove('destroyed');
+        })
+    }
     function winProcess() {
         console.log(`Winner is ${p[turn].name}`);
         out.textContent = `Winner is: \n ${p[turn].name}`
+        p[turn].win++;
+        resetShip(p[0]); resetShip(p[1]);
+        screenControler.drawPlayerCard(p[turn]);
+        state = 0;
+        setTimeout(() => {
+            out.textContent = '';
+            document.querySelector('.control .play').style.display = 'inline-block';
+        }, 3000);
     }
     function changeTurn() {
         p[turn].dom.board.classList.remove('disable-click');
@@ -50,16 +63,15 @@ const logicControl = (() => {
         p[turn].dom.board.classList.add('disable-click');
     }
     function process_cell(cell) {
+        if (state != 3) return;
         let [i, j] = cell.style["grid-area"].split('/').map(pos => Number(pos) - 1);
         try {
             // Step 2: Fire
             let id = p[r(turn)].board.fire(i, j);
             cell.classList.add('hidden');
-            console.log(id);
             if (id != null) {
                 cell.classList.add('fire');
                 if (p[r(turn)].board.allPartDestroyed(id)) {
-                    console.log(p[r(turn)].dom);
                     document.getElementById(id).classList.add('destroyed');
                 }
                 if (p[r(turn)].board.isLose()) {
@@ -67,7 +79,6 @@ const logicControl = (() => {
                 }
             }
             // Step 3:
-            changeTurn();
             return true;
         } catch (err) {
             console.log(i, j, turn, err);
@@ -100,8 +111,7 @@ const logicControl = (() => {
     }
     function randomShuffe(player) {
         let shipInfo = [], type = [];
-        for (let i = 0; i < player.dom.ships.children.length; i++) {
-            let s = player.dom.ships.children[i];
+        for (let s of player.dom.ships.children) {
             let img = s.querySelector('img');
             shipInfo.push({id: img.id, len: ships[img.alt].size});
             type.push(img.alt); // to get ship src img later
