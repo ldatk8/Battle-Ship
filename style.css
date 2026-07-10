@@ -1,0 +1,116 @@
+body {
+    background-image: url('./assert/image/background.jpg');
+    padding: 20px;
+}
+h1 {
+    text-align: center;
+}
+.container {
+    display: flex;
+    gap: 2vw;
+    width: 100%;
+}
+.container .grid {
+    flex: 1;
+    display: grid;
+    aspect-ratio: 1 / 1;
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: repeat(13, 1fr);
+    border: solid 0.5px black;
+}
+.container .grid .cell {
+    border: solid 0.5px black;
+}
+.grid img {
+    height: 100%;
+    width: 100%;
+}
+.cell {
+    background-color: #327F99;
+}
+.cell.relative {
+    position: relative;;
+}
+.cell.hidden {
+    background-color: transparent;
+}
+.cell.fire {
+    background-image: url('./assert/image/fire.png');
+    background-position: center;
+    width: 80%;
+}
+.disable-click {
+    pointer-events: none;
+    opacity: 0.7;
+    /* filter: blur(10px); */
+}
+.info {
+    margin: 30px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.info .card {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    height: 7em;
+    border: 1px solid orange;
+    border-radius: 5px;
+    padding: 1em;
+    max-width: 14em;
+    gap: 1em;
+    font-weight: bold;
+    background-color: antiquewhite;
+}
+.info .card img {
+    height: 6em;
+    width: 4.5em;
+    border-radius: 3px;
+}
+.info .card.opponment {
+    flex-direction: row-reverse;
+}
+.info button.play {
+    flex: 0;
+}
+.control {
+    width: 115px;
+}
+.control .mess {
+    display: block;
+    width: 100%; 
+    text-align: center;
+    margin-top: 5px;
+    background-color: antiquewhite;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+#status {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+.advanceFeature {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.advanceFeature img {
+    width: 100px;
+}
+.flex_box {
+    display: flex;
+    flex-direction: column;
+}
+.flex_box .ships {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.flex_box .ship {
+}
+.flex_box .ships img.destroyed {
+    filter: grayscale(100%) brightness(50%);
+    opacity: 0.55;
+}
