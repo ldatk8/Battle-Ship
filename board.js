@@ -43,7 +43,7 @@ function Board() {
         if (!ok(x, y)) throw Error("invail position");
         let idReturn = null;
         if (board[x][y] == 'x') {
-            return "Repeat fire";
+            throw Error("Repeat fire");
         } else if (board[x][y] != '.') {
             shipInBoard[board[x][y]].remain--;
             idReturn = board[x][y];
@@ -70,6 +70,15 @@ function Board() {
         }
     }
 
+    function notFirePosition() {
+        let arr = [];
+        for (let i = 0; i < sz; i++) {
+            for (let j = 0; j < sz; j++) {
+                if (board[i][j] != 'x') arr.push({i, j});
+            }
+        }
+        return arr;
+    }
     function allVaildPosition(len, blacklist) {
         // performance of this function is so bad
         let vaild = [];
@@ -90,6 +99,8 @@ function Board() {
         return vaild;
     }
     function createRandomPosition(ships) {
+        if (sz == 0) throw Error("Board have not been init");
+        init(sz);
         // ships = [[len], 'id'], [2, 'afsa32'], [4, 'sdf12'], [1, 'asf]]] 
         let blacklists = [], pos = []; // contain object like {x, y, dir}, 
         for (let i = 0; i < ships.length; i++) blacklists.push([]);
@@ -109,7 +120,7 @@ function Board() {
 
             if (vaild.length == 0) {
                 if (ship == 0) {
-                    return "The input ships cannot fit in the board, please try to change ship size";
+                    throw Error("The input ships cannot fit in the board, please try to change ship size");
                 } 
                 removeShip(ship - 1);
                 ship -= 2;
@@ -120,10 +131,13 @@ function Board() {
                 put(pos[ship].i, pos[ship].j, pos[ship].dir, ships[ship].len, ships[ship].id);
             }
         }
-        return "Done!";
+        return pos;
+    }
+    function putShipInGridRandom() {
+        
     }
 
-    return {init, put, fire, isLose, allPartDestroyed, printBoard, createRandomPosition};
+    return {init, put, fire, isLose, allPartDestroyed, printBoard, createRandomPosition, notFirePosition};
 };
 
 export {Board};
