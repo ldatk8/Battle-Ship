@@ -52,10 +52,10 @@ const screenControler = (() => {
         })
     }
     function drawInitShip() {
-        // shipsContainer.forEach(s => s.innerHTML = '');
+        shipsContainer.forEach(s => s.innerHTML = '');
         // for (let type of Object.keys(ships)) addShip(type);
         addShip('5'); // simple for test 
-        addShip('4');
+        // addShip('4');
     }
     const dirX = [-1, 0, 1, 0]; // URDL
     const dirY = [0, 1, 0, -1];
@@ -125,7 +125,7 @@ const screenControler = (() => {
     }
 
     init();
-    return { drawBoard, drawInitShip, drawShipsToBoard };
+    return { drawBoard, drawInitShip, drawShipsToBoard, drawPlayerCard};
 })();
 
 const eventHandle = (() => {
