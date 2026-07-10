@@ -7,8 +7,19 @@ class Player {
         this.id = crypto.randomUUID();        
         this.avatarSrc = avatarSrc;
         this.board = Board();
+        this.win = 0;
+    }
+    // This for easy maintain DOM
+    dom = {};
+    addDom(board, ships, feature) {
+        dom = {board, ships};
     }
 };
 
+let p = [new Player("Lang Dat", "./assert/image/avt.jpg"),
+         new Player("Computer", "./assert/image/avt2.jpg")
+];
 
-export {Player};
+p.forEach(x => x.board.init(13));
+
+export {Player, p};
