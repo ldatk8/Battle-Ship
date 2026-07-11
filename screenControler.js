@@ -44,10 +44,11 @@ const screenControler = (() => {
     // make sure two player also have the save ship
     let shipsContainer = document.querySelectorAll('.ships');
     function addShip(type) {
+        type = String(type);
         shipsContainer.forEach(s => {
             let div = document.createElement('div');
             div.className = 'ship';
-            div.innerHTML = `<img src="${ships[type].src}" id=${crypto.randomUUID().split('-')} alt="${type}">`;
+            div.innerHTML = `<img src="${ships[type].src}" id=${crypto.randomUUID().split('-').join('')} alt="${type}">`;
             s.appendChild(div);
         })
     }
@@ -109,6 +110,47 @@ const screenControler = (() => {
         p[1].dom.feature = document.querySelector('.flex_box.opponment .advanceFeature')
         p[1].dom.player_card = document.querySelector('.card.opponment');
     }
+    
+    let shipsUse = document.querySelector('.shipsUse');
+    function addShipToPopup(src) {
+        let div = document.createElement('div');
+        div.className = 'shipWithRM';
+        div.innerHTML = `
+            <svg width="15" viewbox="0 0 50 50">
+                <circle cx="25" cy="25" r="20" stroke="gray" stroke-width="4" fill="transparent"></circle>
+                <line x1="10" y1="10" x2="40" y2="40" stroke-width="3" stroke="gray"></line>
+                <line x1="10" y1="40" x2="40" y2="10" stroke-width="3" stroke="gray"></line>
+            </svg>
+            <img src="${src}">`
+        div.querySelector('svg').addEventListener('click', (e) => {
+            console.log(e.target);
+            removeShip(e.target.closest('.shipWithRM'));
+        });
+        shipsUse.appendChild(div);
+    }
+    function chooseShip(img) {
+        console.log(img.alt)
+        addShip(img.alt);
+        addShipToPopup(img.src);
+    }
+    function removeShip(shipWithRM) {
+        let index = (Array.from(shipWithRM.parentElement.children)).findIndex(x => x ==shipWithRM);
+        console.log({index});
+        document.querySelectorAll(`.ships img:nth-child(${index + 1})`).forEach(e => {
+            console.log(e);
+            e.parentElement.remove();
+        })
+        shipWithRM.remove();
+    }
+    function fetchShipToPopup() {
+        let shipUse = shipsUse;
+        shipUse.innerHTML = '';
+        let allExitShips = document.querySelector('.ships');
+        for (let s of allExitShips.children) {
+            let img = s.querySelector('img');
+            addShipToPopup(img.src, img.id);
+        }
+    }
     function init() {
         board.forEach(b => {
             drawBoard(b);
@@ -117,6 +159,7 @@ const screenControler = (() => {
         addPlayerDOMInfo();
         drawPlayerCard(p[0]);
         drawPlayerCard(p[1]);
+        fetchShipToPopup();
 
         // hidden some button until it need
         document.querySelectorAll('.random, .addShip, .advanceFeature')
@@ -125,7 +168,7 @@ const screenControler = (() => {
     }
 
     init();
-    return { drawBoard, drawInitShip, drawShipsToBoard, drawPlayerCard};
+    return { drawBoard, drawInitShip, drawShipsToBoard, drawPlayerCard, chooseShip};
 })();
 
 const eventHandle = (() => {
@@ -133,13 +176,33 @@ const eventHandle = (() => {
         logicControl.randomShuffe(p[0]);
     });
     document.querySelector('.mine .advanceFeature .plane').addEventListener('click', (e) => {
-        logicControl.usePlane(p[0]);
+        logicControl.usePlane(0);
     });
+    
     document.querySelector('.opponment button.random').addEventListener('click', (e) => {
         logicControl.randomShuffe(p[1]);
     });
+    document.querySelector('.opponment .advanceFeature .plane').addEventListener('click', (e) => {
+        logicControl.usePlane(1);
+    });
+
     document.querySelector('.control button.play').addEventListener('click', logicControl.clickPlay);
 
+    let overlay = document.querySelector('.overlay');
+    window.onclick = () => {
+        overlay.style.display = 'none';
+    }
+    document.querySelector('.flex_box .addShip').onclick = (e) => {
+        overlay.style.display = 'flex';
+        e.stopPropagation();
+    }
+    overlay.querySelector('.content').addEventListener('click', (e) => {
+        e.stopPropagation();
+    })
+    overlay.querySelectorAll('.shipAvailable img')
+        .forEach(e => {
+            e.addEventListener('click', () => {screenControler.chooseShip(e)})
+        });
     return {};
 })();
 
