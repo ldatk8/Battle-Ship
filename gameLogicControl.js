@@ -92,19 +92,19 @@ const logicControl = (() => {
         if (process_cell(cell))
             changeTurn();
     }
-    function usePlane(player) {
-        let canFire = player.board.notFirePosition();
+    function usePlane(id) {
+        if (p[id].planeUse == 3 || id != turn) return;
+        p[id].planeUse++;
+        let canFire = p[r(id)].board.notFirePosition();
         let index = new Set();
-        while (index.size < 5 || index.size < canFire.length) {
+        while (index.size < 5 && index.size < canFire.length) {
             index.add(Math.floor(Math.random() * 100000 % canFire.length));
         }
-        console.log(canFire, index);
-        console.log(index.length, canFire.length)
+
         for (let cur of index) {
             let i = canFire[cur].i, j = canFire[cur].j; 
-            let cell = player.dom.board.
-            querySelector(`.cell[style="grid-area: ${i + 1}/${j + 1}/${i + 2}/${j + 2}"]`);
-            // style="grid-area: 1 / 12 / 2 / 13;"
+            let cell = p[r(id)].dom.board.
+                querySelector(`.cell[style*="grid-area: ${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}"]`);
             process_cell(cell);
         }
         changeTurn();
