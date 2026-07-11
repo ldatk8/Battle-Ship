@@ -8,6 +8,7 @@ class Player {
         this.avatarSrc = avatarSrc;
         this.board = Board();
         this.win = 0;
+        this.planeUse = 0;
     }
     // This for easy maintain DOM
     dom = {};
