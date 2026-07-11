@@ -81,7 +81,7 @@ function Board() {
     }
     function allVaildPosition(len, blacklist) {
         // performance of this function is so bad
-        let vaild = [];
+        let valid = [];
         for (let i = 0; i < sz; i++) {
             for (let j = 0; j < sz; j++) {
                 for (let dir = 0; dir < 3; dir++) {
@@ -90,25 +90,27 @@ function Board() {
                         if (!ok(i + k*dirX[dir], j + k*dirY[dir]) ||
                             board[i + k*dirX[dir]][j + k*dirY[dir]] != '.') pass = false;
                     }
-                    if (pass && blacklist.every((obj) => obj != {i, j, dir})) {
-                        vaild.push({i, j, dir});
+                    if (pass && !blacklist[i][j].includes(dir)) {
+                        valid.push({i, j, dir});
                     }
                 }
             }
         }
-        return vaild;
+        return valid;
     }
     function createRandomPosition(ships) {
         if (sz == 0) throw Error("Board have not been init");
         init(sz);
         // ships = [[len], 'id'], [2, 'afsa32'], [4, 'sdf12'], [1, 'asf]]] 
-        let blacklists = [], pos = []; // contain object like {x, y, dir}, 
-        for (let i = 0; i < ships.length; i++) blacklists.push([]);
+        let pos = []; // contain object like {x, y, dir}, 
+        let blacklists = Array(sz).fill(Array(sz).fill(Array(sz).fill([])));
+        // blacklists will 3D array
         // it will help ful for backup (delete in board) if some ship later cannot put anywhere
         // Để hạn chế phải xếp lại, thì mình sắp xếp thứ tự từ to nhất đến nhỏ nhất
         ships.sort((a, b) => b.len - a.len);
         function removeShip(ship) { // to easy maintain
-            blacklists[ship].push(pos[ship]);
+            // blacklists[ship].push(pos[ship]);
+            blacklists[ship][pos[ship].x][pos[ship].y].push(pos[ship].dir);
             for (let k = 0; k < len; k++) {
                 board[pos[ship].x + k*dirX[dir]][pos[ship].y + k*dirY[dir]] = '.';
             }
@@ -133,9 +135,7 @@ function Board() {
         }
         return pos;
     }
-    function putShipInGridRandom() {
-        
-    }
+
 
     return {init, put, fire, isLose, allPartDestroyed, printBoard, createRandomPosition, notFirePosition};
 };
