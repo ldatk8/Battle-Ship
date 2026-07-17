@@ -24,8 +24,11 @@ h1 {
     border: solid 0.5px black;
 }
 .grid img {
-    height: 100%;
-    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.grid .imgContainer {
+    overflow: hidden;
 }
 .cell {
     background-color: #327F99;
@@ -122,7 +125,7 @@ h1 {
     background-color: rgb(0, 0, 0, 0.7);
     z-index: 1000;
     display: flex; justify-content: center; align-items: center;
-/* display: none; */
+    display: none;
 }
 .content {
     width: 80vw;
