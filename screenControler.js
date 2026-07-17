@@ -61,7 +61,7 @@ const screenControler = (() => {
     const dirX = [-1, 0, 1, 0]; // URDL
     const dirY = [0, 1, 0, -1];
     function drawShipsToBoard(shipInfo, pos, type, board) {
-        // ! NOTE: some ship display wrong, but I will igrone, and fix it later
+        // ! NOTE: some ship display wrong, but I will igrone, and fix it later -> fixed
         drawBoard(board);
         // shipInfo is input of createRandomPosition in board
         // shipInfo [[len], 'id'], [2, 'afsa32'], [4, 'sdf12'], [1, 'asf]]] 
@@ -80,16 +80,20 @@ const screenControler = (() => {
                 console.log(img.src);
             }
 
-            if (dir == 0)  // grid line is 1 base-indexed
-                img.style["grid-area"] = `${x + 2 - shipInfo[i].len}/${y + 1}/${x + 2}/${y + 2}`;
-            else if (dir == 1)
-                img.style["grid-area"] = `${x + 1}/${y + 1}/${x + 2}/${y + 1 + shipInfo[i].len}`;
-            else if (dir == 2) 
-                img.style["grid-area"] = `${x + 1}/${y + 1}/${x + 1 + shipInfo[i].len}/${y + 2}`;
-            else if (dir == 3)
-                img.style["grid-area"] = `${x + 1}/${y + 2 - shipInfo[i].len}/${x + 2}/${y + 2}`;
+            let div = document.createElement('div');
+            div.className = 'imgContainer';
+            div.append(img);
 
-            board.appendChild(img);
+            if (dir == 0)  // grid line is 1 base-indexed
+                div.style["grid-area"] = `${x + 2 - shipInfo[i].len}/${y + 1}/${x + 2}/${y + 2}`;
+            else if (dir == 1)
+                div.style["grid-area"] = `${x + 1}/${y + 1}/${x + 2}/${y + 1 + shipInfo[i].len}`;
+            else if (dir == 2) 
+                div.style["grid-area"] = `${x + 1}/${y + 1}/${x + 1 + shipInfo[i].len}/${y + 2}`;
+            else if (dir == 3)
+                div.style["grid-area"] = `${x + 1}/${y + 2 - shipInfo[i].len}/${x + 2}/${y + 2}`;
+
+            board.appendChild(div);
         }
     }
 
